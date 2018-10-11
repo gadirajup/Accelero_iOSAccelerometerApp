@@ -15,15 +15,36 @@ class ViewController: UIViewController {
     @IBOutlet weak var y: UILabel!
     @IBOutlet weak var z: UILabel!
     
-    var motionManger: CMMotionManager!
+    let motion = CMMotionManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        motionManger.startAccelerometerUpdates(to: .main, withHandler: updateLabels)
+        
+        startAccelerometer()
     }
 
-    func updateLabels(data: CMAccelerometerData?, error: Error?) {
-        print("Test")
+    func startAccelerometer(){
+        let motion = CMMotionManager()
+        motion.accelerometerUpdateInterval = 1/60
+        motion.startAccelerometerUpdates()
+        
+        let timer = Timer(fire: Date(), interval: 1/60, repeats: true
+            , block: { (Timer) in
+                guard let data = motion.accelerometerData else { return }
+                self.updateLabels(x: data.acceleration.x, y: data.acceleration.y, z: data.acceleration.z)
+        })
+        
+        RunLoop.current.add(timer, forMode: .default)
+    }
+    
+    func updateLabels(x: Double, y: Double, z: Double) {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 3
+        formatter.minimumFractionDigits = 3
+        
+        self.x.text = formatter.string(for: x)
+        self.y.text = formatter.string(for: y)
+        self.z.text = formatter.string(for: z)
     }
 }
 
