@@ -7,14 +7,23 @@
 //
 
 import UIKit
+import CoreMotion
 
 class ViewController: UIViewController {
-
+    
+    @IBOutlet weak var x: UILabel!
+    @IBOutlet weak var y: UILabel!
+    @IBOutlet weak var z: UILabel!
+    
+    var motionManger: CMMotionManager!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        motionManger.startAccelerometerUpdates(to: .main, withHandler: updateLabels)
     }
 
-
+    func updateLabels(data: CMAccelerometerData?, error: Error?) {
+        print("Test")
+    }
 }
 
